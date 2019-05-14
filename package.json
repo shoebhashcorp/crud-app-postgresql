@@ -1,0 +1,24 @@
+{
+  "name": "psqlproject",
+  "version": "1.0.0",
+  "description": "crud application using pgsql",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "author": "shoeb",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.4",
+    "body-parser": "^1.19.0",
+    "bookshelf": "^0.14.2",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.16.7",
+    "path": "^0.12.7",
+    "pg": "^7.11.0",
+    "validator": "^10.11.0"
+  }
+}
