@@ -4,6 +4,7 @@ const User = require("../../models/user");
 const bcrypt = require("bcryptjs");
 const commonValidations = require("../../validation/register");
 // Load Input Validation
+const isEmpty = require("../../validation/is-empty");
 
 const validateLoginInput = require("../../validation/login");
 
@@ -24,7 +25,7 @@ function validateRegisterInput(data, otherValidations) {
         }
 
         if (user.get("email") === data.email) {
-          errors.email = "There is user with such email.";
+          errors.email = "Email is already exists";
         }
       }
 
@@ -48,34 +49,65 @@ router.get("/:identifier", (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-  const { errors, isValid } = commonValidations(req.body);
-  // Check Validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  } else if (isValid) {
-    const { username, password, timezone, email } = req.body;
-    const password_digest = bcrypt.hashSync(password, 10);
+  validateRegisterInput(req.body, commonValidations).then(
+    ({ errors, isValid }) => {
+      if (isValid) {
+        const { username, password, timezone, email } = req.body;
+        const password_digest = bcrypt.hashSync(password, 10);
 
-    User.forge(
-      {
-        username,
-        timezone,
-        email,
-        password_digest
-      },
-      {
-        hasTimestamps: true
+        User.forge(
+          {
+            username,
+            timezone,
+            email,
+            password_digest
+          },
+          {
+            hasTimestamps: true
+          }
+        )
+          .save()
+          .then(user => res.json({ success: true }))
+          .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+          });
+      } else {
+        res.status(400).json(errors);
       }
-    )
-      .save()
-      .then(user => res.json({ success: true }))
-      .catch(err => {
-        console.log(err);
-        res.status(500).json({ error: err });
-      });
-  } else {
-    res.status(400).json(errors);
-  }
+    }
+  );
 });
+
+// router.post("/register", (req, res) => {
+//   const { errors, isValid } = commonValidations(req.body);
+//   // Check Validation
+//   if (!isValid) {
+//     return res.status(400).json(errors);
+//   } else if (isValid) {
+//     const { username, password, timezone, email } = req.body;
+//     const password_digest = bcrypt.hashSync(password, 10);
+
+//     User.forge(
+//       {
+//         username,
+//         timezone,
+//         email,
+//         password_digest
+//       },
+//       {
+//         hasTimestamps: true
+//       }
+//     )
+//       .save()
+//       .then(user => res.json({ success: true }))
+//       .catch(err => {
+//         console.log(err);
+//         res.status(500).json({ error: err });
+//       });
+//   } else {
+//     res.status(400).json(errors);
+//   }
+// });
 
 module.exports = router;
