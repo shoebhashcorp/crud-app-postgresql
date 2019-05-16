@@ -1,5 +1,6 @@
 const bookshelf = require("../bookshelf");
-
-module.exports = bookshelf.Model.extend({
+bookshelf.plugin("registry");
+User = bookshelf.Model.extend({
   tableName: "users"
 });
+module.exports = bookshelf.model("User", User);

@@ -10,7 +10,7 @@ const validateLoginInput = require("../../validation/login");
 const authenticate = require("../../middlewares/authenticate");
 const isEmpty = require("../../validation/is-empty");
 const config = require("../../config");
-
+knex = require("../../knexfile");
 function validateRegisterInput(data, otherValidations) {
   let { errors } = otherValidations(data);
 
@@ -37,17 +37,21 @@ function validateRegisterInput(data, otherValidations) {
     });
 }
 
-// router.get("/:identifier", (req, res) => {
-//   User.query({
-//     select: ["id", "email"],
-//     where: { email: req.params.identifier },
-//     orWhere: { username: req.params.identifier }
-//   })
-//     .fetch()
-//     .then(user => {
-//       res.json({ msg:'users' });
-//     });
-// });
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.query({
+      select: ["username", "email"],
+      where: { email: req.params.identifier },
+      orWhere: { username: req.params.identifier }
+    })
+      .fetch()
+      .then(user => {
+        res.json({ user });
+      });
+  }
+);
 
 router.post("/register", (req, res) => {
   validateRegisterInput(req.body, commonValidations).then(
@@ -99,7 +103,7 @@ router.post("/login", (req, res) => {
             config.jwtSecret
           );
 
-          res.json({ token });
+          res.json({ token: "bearer " + token });
         } else {
           res.status(401).json({ errors: { form: "Invalid Credentials." } });
         }
@@ -110,17 +114,24 @@ router.post("/login", (req, res) => {
     });
 });
 
-// router.get("/currents", authenticate, (req, res) => {
-//   res.json({
-//     msg: "usersfsdfsdf"
-//   });
-// });
+// router.get(
+//   "/currents",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     res.json({
+//       id: req.user.id
+//     });
+//   }
+// );
 
-
-
-router.post('/current', authenticate, (req, res) => {
-  res.status(201).json({user: req.currentUser});
+router.post("/current", authenticate, (req, res) => {
+  res.status(201).json({ user: req.currentUser });
 });
 
+router.get("/us", (req, res) => {
+  User.raw("select * from users").then(function(users) {
+    res.send(users);
+  });
+});
 
 module.exports = router;
