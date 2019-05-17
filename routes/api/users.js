@@ -37,21 +37,21 @@ function validateRegisterInput(data, otherValidations) {
     });
 }
 
-router.get(
-  "/current",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    User.query({
-      select: ["username", "email"],
-      where: { email: req.params.identifier },
-      orWhere: { username: req.params.identifier }
-    })
-      .fetch()
-      .then(user => {
-        res.json({ user });
-      });
-  }
-);
+// router.get(
+//   "/current",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     User.query({
+//       select: ["email"],
+//       where: { email: req.params.email }
+//       // orWhere: { id: req.params.identifier }
+//     })
+//       .fetch()
+//       .then(user => {
+//         res.json({ user });
+//       });
+//   }
+// );
 
 router.post("/register", (req, res) => {
   validateRegisterInput(req.body, commonValidations).then(
@@ -98,7 +98,8 @@ router.post("/login", (req, res) => {
           const token = jwt.sign(
             {
               id: user.get("id"),
-              username: user.get("username")
+              username: user.get("username"),
+              email: user.get("email")
             },
             config.jwtSecret
           );
@@ -114,24 +115,20 @@ router.post("/login", (req, res) => {
     });
 });
 
-// router.get(
-//   "/currents",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     res.json({
-//       id: req.user.id
-//     });
-//   }
-// );
+router.get(
+  "/currents",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      username: req.user.username,
+      email: req.user.email
+    });
+  }
+);
 
 router.post("/current", authenticate, (req, res) => {
   res.status(201).json({ user: req.currentUser });
-});
-
-router.get("/us", (req, res) => {
-  User.raw("select * from users").then(function(users) {
-    res.send(users);
-  });
 });
 
 module.exports = router;
