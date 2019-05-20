@@ -111,8 +111,10 @@ router.post("/login", (req, res) => {
             {
               id: user.get("id"),
               username: user.get("username"),
-              email: user.get("email")
+              email: user.get("email"),
+              expiresIn: 3600
             },
+
             config.jwtSecret
           );
 
