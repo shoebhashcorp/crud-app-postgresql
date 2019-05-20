@@ -21,8 +21,8 @@ passport.deserializeUser(function(id, done) {
 
 module.exports = passport => {
   passport.use(
-    new JwtStrategy(opts, (id, done) => {
-      User.forge({ id: id })
+    new JwtStrategy(opts, (jwt_payload, done) => {
+      User.forge({ id: jwt_payload.id })
         .fetch()
         .then(user => {
           if (user) {

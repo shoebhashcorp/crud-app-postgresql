@@ -1,6 +1,24 @@
+// const bookshelf = require("../bookshelf");
+
+// module.exports = User = bookshelf.Model.extend({
+//   tableName: "users",
+//   posts: function() {
+//     return this.hasMany(Posts);
+//   }
+// });
+
+// module.exports = Posts = bookshelf.Model.extend({
+//   tableName: "contactbook"
+// });
+
 const bookshelf = require("../bookshelf");
 bookshelf.plugin("registry");
-User = bookshelf.Model.extend({
-  tableName: "users"
+const User = bookshelf.Model.extend({
+  tableName: "users",
+  address: function() {
+    return this.hasMany(Address);
+  }
 });
+
+
 module.exports = bookshelf.model("User", User);

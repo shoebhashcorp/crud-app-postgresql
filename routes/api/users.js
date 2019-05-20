@@ -37,6 +37,18 @@ function validateRegisterInput(data, otherValidations) {
     });
 }
 
+router.get("/All", function(req, res) {
+  new User()
+    .fetchAll()
+    .then(function(user) {
+      res.send(user.toJSON());
+    })
+    .catch(function(error) {
+      console.log(error);
+      res.send("An error occured");
+    });
+});
+
 // router.get(
 //   "/current",
 //   passport.authenticate("jwt", { session: false }),
@@ -119,11 +131,7 @@ router.get(
   "/currents",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    res.json({
-      id: req.user.id,
-      username: req.user.username,
-      email: req.user.email
-    });
+    res.send({ user: req.user });
   }
 );
 
