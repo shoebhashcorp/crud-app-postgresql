@@ -5,6 +5,22 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const User = require("../../models/user");
 
+router.get(
+  "/add",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Address.forge({ userID: req.user.id })
+      .fetch({ withRelated: ["user"] })
+      .then(function(collection) {
+        console.log("user", collection);
+        res.json({ error: false, data: collection.toJSON() });
+      })
+      .catch(function(err) {
+        res.status(500).json({ error: true, data: { message: err.message } });
+      });
+  }
+);
+
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
