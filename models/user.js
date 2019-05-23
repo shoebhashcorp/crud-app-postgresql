@@ -16,9 +16,8 @@ bookshelf.plugin("registry");
 const User = bookshelf.Model.extend({
   tableName: "users",
   address: function() {
-    return this.hasMany(Address);
+    return this.hasMany("Address", "userID ");
   }
 });
-
 
 module.exports = bookshelf.model("User", User);

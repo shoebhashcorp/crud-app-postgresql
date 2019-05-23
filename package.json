@@ -4,8 +4,11 @@
   "description": "crud application using pgsql",
   "main": "server.js",
   "scripts": {
+    "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server": " nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "shoeb",
   "license": "ISC",
@@ -14,6 +17,7 @@
     "bluebird": "^3.5.4",
     "body-parser": "^1.19.0",
     "bookshelf": "^0.14.2",
+    "concurrently": "^4.1.0",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.16.7",
