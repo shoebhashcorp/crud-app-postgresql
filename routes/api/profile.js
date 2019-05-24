@@ -9,23 +9,19 @@ router.get(
   "/add",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Address.forge({ userID: req.user.id })
+    Address.where({ userID: req.user.id })
 
-      .fetch({ withRelated: ["user"] })
-      .then(function(address) {
-        if (!address) {
-          res.status(404).json({ error: true, data: {} });
+      .fetchAll({ withRelated: ["user"] })
+      .then(function(profile) {
+        if (!profile) {
+          return res.status(404).json("There is no profile for this user");
         } else {
-          res.json({ error: false, data: address.toJSON() });
+          res.json(profile);
         }
       })
-      .catch(function(err) {
-        res.status(500).json({ error: true, data: { message: err.message } });
-      });
+      .catch(err => res.status(404).json(err));
   }
 );
-
-
 
 router.post(
   "/add",
