@@ -67,7 +67,7 @@ class Login extends Component {
                   type="email"
                   value={this.state.identifier}
                   onChange={this.onChange}
-                  error={errors.email}
+                  error={errors.identifier}
                 />
 
                 <TextFieldGroup

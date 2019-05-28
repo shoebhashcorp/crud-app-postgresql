@@ -97,6 +97,13 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { identifier, password } = req.body;
 
   User.query({
@@ -120,11 +127,13 @@ router.post("/login", (req, res) => {
 
           res.json({ token: "bearer " + token });
         } else {
-          res.status(401).json({ errors: { form: "Invalid Credentials." } });
+          errors.password = "Password incorrect";
+          return res.status(400).json(errors);
         }
       } else {
         console.log(res);
-        res.status(401).json({ errors: { form: "Invalid Credentials." } });
+        errors.identifier = "User not found";
+        return res.status(400).json(errors);
       }
     });
 });
@@ -141,24 +150,24 @@ router.post("/current", authenticate, (req, res) => {
   res.status(201).json({ user: req.currentUser });
 });
 
-router.get(
-  "/adddata",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    User.forge({ id: req.user.id })
+// router.get(
+//   "/adddata",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     User.forge({ id: req.user.id })
 
-      .fetch({ withRelated: ["address"] })
-      .then(function(address) {
-        if (!address) {
-          res.status(404).json({ error: true, data: {} });
-        } else {
-          res.json({ address });
-        }
-      })
-      .catch(function(err) {
-        res.status(500).json({ error: true, data: { message: err.message } });
-      });
-  }
-);
+//       .fetch({ withRelated: ["address"] })
+//       .then(function(address) {
+//         if (!address) {
+//           res.status(404).json({ error: true, data: {} });
+//         } else {
+//           res.json({ address });
+//         }
+//       })
+//       .catch(function(err) {
+//         res.status(500).json({ error: true, data: { message: err.message } });
+//       });
+//   }
+// );
 
 module.exports = router;

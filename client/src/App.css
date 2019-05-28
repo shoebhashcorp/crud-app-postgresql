@@ -31,3 +31,45 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: Sailec-Regular;
+  background-image: linear-gradient(
+    to left,
+    #2e4c78,
+    #006b9b,
+    #008aa0,
+    #00a47f,
+    #28b941
+  );
+
+  height: 100vh;
+}
+
+.lead {
+  font-family: Sailec-Regular;
+  color: black !important;
+}
+
+footer {
+  /* position: fixed; */
+  bottom: 0;
+  width: 100%;
+}
+.login {
+  height: 100vh;
+}
+
+.btn-info {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-info:hover {
+  color: rgb(7, 7, 7);
+  background-color: #eaf5f7;
+  border-color: #eef7f8;
+}
+.text-muted {
+  color: rgb(0, 1, 7) !important;
+}
