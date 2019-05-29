@@ -60,10 +60,10 @@ footer {
   height: 100vh;
 }
 
-.btn-info {
+/* .btn-info {
   background-color: #dc3545;
   border-color: #dc3545;
-}
+} */
 
 .btn-info:hover {
   color: rgb(7, 7, 7);

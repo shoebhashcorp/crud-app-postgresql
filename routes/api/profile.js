@@ -11,7 +11,8 @@ router.get(
   (req, res) => {
     Address.where({ userID: req.user.id })
 
-      .fetchAll({ withRelated: ["user"] })
+      .fetchAll({ withRelated: ["user"] }.orderBy("updated_at").limit(4))
+
       .then(function(profile) {
         if (!profile) {
           return res.status(404).json("There is no profile for this user");
@@ -65,4 +66,33 @@ router.get("/user/:id", (req, res) => {
     });
 });
 
+router.put(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+    Address.where({ id: req.params.id })
+      .fetch()
+      .then(add => {
+        add
+          .save({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phone: req.body.phone,
+            address: req.body.address
+          })
+
+          .then(saved => {
+            res.json({ saved });
+          });
+      });
+  }
+);
 module.exports = router;
