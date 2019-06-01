@@ -28,7 +28,7 @@ export const getCurrentProfile = () => dispatch => {
 export const getProfileById = id => dispatch => {
   dispatch(setProfileLoading());
   axios
-    .get(`/api/profile/user/${id}`)
+    .get(`/api/profile/contact/${id}`)
     .then(res =>
       dispatch({
         type: GET_PROFILE,
@@ -37,8 +37,8 @@ export const getProfileById = id => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_PROFILE,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };
@@ -64,4 +64,21 @@ export const clearCurrentProfile = () => {
   return {
     type: CLEAR_CURRENT_PROFILE
   };
+};
+
+export const deleteAddress = id => dispatch => {
+  axios
+    .delete(`/api/profile/user/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_PROFILE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };

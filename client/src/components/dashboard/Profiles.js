@@ -1,26 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-// import { getCurrentProfile } from "../../actions/profileActions";
-// import { deleteExperience } from "../../actions/profileActions";
-import { getProfileById } from "../../actions/profileActions";
+import { Link } from "react-router-dom";
+import { deleteAddress } from "../../actions/profileActions";
 
 class Profile extends Component {
- 
-
   onDeleteClick(id) {
-    this.props.deleteEducation(id);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.profile === null && this.props.profile.loading) {
-      this.props.history.push("/not-found");
-    }
+    this.props.deleteAddress(id);
   }
 
   render() {
-    
-
     const profile = this.props.profile.profile.map(pro => (
       <tr key={pro.id}>
         <td>{pro.id}</td>
@@ -31,8 +20,14 @@ class Profile extends Component {
         <td>{pro.address}</td>
 
         <td>
+          {" "}
+          <Link to={`/edit-profile/${pro.id}`} className="btn btn-success">
+            <i className="fas fa-user-circle text-info mr-1" /> Edit 
+          </Link>
+        </td>
+        <td>
           <button
-            onClick={this.onDeleteClick.bind(this, pro._id)}
+            onClick={this.onDeleteClick.bind(this, pro.id)}
             className="btn btn-danger"
           >
             Delete
@@ -41,9 +36,9 @@ class Profile extends Component {
       </tr>
     ));
     return (
-      <div class="container">
+      <div className="container">
         <h4 className="mb-4">Education Credentials</h4>
-        <table class="table table-dark">
+        <table className="table table-dark">
           <thead>
             <tr>
               <th>id</th>
@@ -52,6 +47,9 @@ class Profile extends Component {
               <th>email</th>
               <th>phone</th>
               <th>address</th>
+              <th>edit</th>
+              <th>delete</th>
+
               <th />
             </tr>
             {profile}
@@ -63,8 +61,9 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
-  getProfileById: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired
+  // getProfileById: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
+  deleteAddress: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -73,5 +72,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProfileById }
+  { deleteAddress }
 )(Profile);

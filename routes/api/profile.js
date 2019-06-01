@@ -11,7 +11,7 @@ router.get(
   (req, res) => {
     Address.where({ userID: req.user.id })
 
-      .fetchAll({ withRelated: ["user"] }.orderBy("updated_at").limit(4))
+      .fetchAll({ withRelated: ["user"] })
 
       .then(function(profile) {
         if (!profile) {
@@ -67,7 +67,7 @@ router.get("/user/:id", (req, res) => {
 });
 
 router.put(
-  "/user/:id",
+  "/profile/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateProfileInput(req.body);
@@ -95,4 +95,37 @@ router.put(
       });
   }
 );
+
+router.delete(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Address.where({ id: req.params.id })
+      .destroy()
+      .then(destroyed => {
+        res.json({ destroyed });
+      });
+  }
+);
+
+router.get(
+  "/contact/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const errors = {};
+    Address.query({
+      where: { id: req.params.id }
+    })
+      .fetchAll({ withRelated: ["user"] })
+      .then(add => {
+        if (!add) {
+          errors.noadd = "There is no profile for this user";
+          return res.status(404).json(errors);
+        }
+        res.json(add);
+      })
+      .catch(err => res.status(404).json({ profile: "There are no profiles" }));
+  }
+);
+
 module.exports = router;
