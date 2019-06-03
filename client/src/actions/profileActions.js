@@ -54,6 +54,7 @@ export const createProfile = (profileData, history) => dispatch => {
       })
     );
 };
+
 export const updateProfile = (profileData, history) => dispatch => {
   axios
     .put(`/api/profile/profile/${profileData.id}`, profileData)
@@ -71,6 +72,7 @@ export const setProfileLoading = () => {
     type: PROFILE_LOADING
   };
 };
+
 export const clearCurrentProfile = () => {
   return {
     type: CLEAR_CURRENT_PROFILE

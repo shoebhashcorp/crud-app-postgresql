@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import TextFieldGroup from "../common/TextFieldGroup";
-
+import SocialLogin from "./SocialLogin";
 class Register extends Component {
   constructor() {
     super();
@@ -104,6 +104,12 @@ class Register extends Component {
                   onChange={this.onChange}
                   error={errors.passwordConfirmation}
                 />
+                <div className="col-sm-3 easyaccess text-center">
+                  <div className="acces-way">
+                    <p>Easily Using</p>
+                    <SocialLogin />
+                  </div>
+                </div>
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>
             </div>
