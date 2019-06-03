@@ -1,10 +1,17 @@
-import isEmpty from '../validation/is-empty';
+import { SET_CURRENT_USER, SET_SOCKET_CONNECTION } from "../actions/types";
+import isEmpty from "../validation/is-empty";
 
-import { SET_CURRENT_USER } from '../actions/types';
+var protocol = window.location.protocol;
+var slashes = protocol.concat("//");
+var host = slashes.concat(window.location.hostname);
 
 const initialState = {
   isAuthenticated: false,
-  user: {}
+
+  user: {},
+  socket: null,
+
+  socketURI: `${host}:8080`
 };
 
 export default function(state = initialState, action) {
@@ -15,6 +22,13 @@ export default function(state = initialState, action) {
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload
       };
+
+    case SET_SOCKET_CONNECTION:
+      return {
+        ...state,
+        socket: action.payload
+      };
+
     default:
       return state;
   }
