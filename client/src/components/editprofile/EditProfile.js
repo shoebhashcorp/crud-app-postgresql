@@ -4,10 +4,10 @@ import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import TextFieldGroup from "../common/TextFieldGroup";
 
-import { createProfile, getProfileById } from "../../actions/profileActions";
+import { updateProfile, getProfileById } from "../../actions/profileActions";
 import isEmpty from "../../validation/is-empty";
 
-class CreateProfile extends Component {
+class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,9 +24,12 @@ class CreateProfile extends Component {
   }
 
   componentDidMount() {
+    //let editdata;
     if (this.props.match.params.id) {
+      console.log("dataid", this.props.match.params.id);
       this.props.getProfileById(this.props.match.params.id);
     }
+    //console.log("data", this.props.getProfileById(this.props.match.params.id));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,23 +39,24 @@ class CreateProfile extends Component {
 
     if (nextProps.profile.profile) {
       const profile = nextProps.profile.profile;
-      console.log("string11", profile);
+
       // If profile field doesnt exist, make empty string
       profile.firstName = !isEmpty(profile.firstName) ? profile.firstName : "";
       profile.lastName = !isEmpty(profile.lastName) ? profile.lastName : "";
       profile.email = !isEmpty(profile.email) ? profile.email : "";
       profile.phone = !isEmpty(profile.phone) ? profile.phone : "";
       profile.address = !isEmpty(profile.address) ? profile.address : "";
-
+      let editdata = profile[0];
+      //console.log("string11", editdata);
       // Set component fields state
       this.setState({
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        email: profile.email,
-        phone: profile.phone,
-        address: profile.address
+        firstName: editdata.firstName,
+        lastName: editdata.lastName,
+        email: editdata.email,
+        phone: editdata.phone,
+        address: editdata.address
       });
-      console.log("fsdf", profile.email);
+      //console.log("ddd", this.state.firstName);
     }
   }
 
@@ -60,6 +64,7 @@ class CreateProfile extends Component {
     e.preventDefault();
 
     const profileData = {
+      id: this.props.match.params.id,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       email: this.state.email,
@@ -68,7 +73,7 @@ class CreateProfile extends Component {
       address: this.state.address
     };
 
-    this.props.createProfile(profileData, this.props.history);
+    this.props.updateProfile(profileData, this.props.history);
   }
 
   onChange(e) {
@@ -130,7 +135,7 @@ class CreateProfile extends Component {
                   error={errors.address}
                   info="please provide address"
                 />
-
+                userid
                 <input
                   type="submit"
                   value="Submit"
@@ -145,8 +150,8 @@ class CreateProfile extends Component {
   }
 }
 
-CreateProfile.propTypes = {
-  createProfile: PropTypes.func.isRequired,
+EditProfile.propTypes = {
+  updateProfile: PropTypes.func.isRequired,
   getProfileById: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -159,5 +164,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createProfile, getProfileById }
-)(withRouter(CreateProfile));
+  { updateProfile, getProfileById }
+)(withRouter(EditProfile));

@@ -54,6 +54,17 @@ export const createProfile = (profileData, history) => dispatch => {
       })
     );
 };
+export const updateProfile = (profileData, history) => dispatch => {
+  axios
+    .put(`/api/profile/profile/${profileData.id}`, profileData)
+    .then(res => history.push("/dashboard"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 export const setProfileLoading = () => {
   return {
@@ -72,13 +83,13 @@ export const deleteAddress = id => dispatch => {
     .then(res =>
       dispatch({
         type: GET_PROFILE,
-        payload: res.data
+        payload: {}
       })
     )
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
-        payload: err.response.data
+        payload: err.res.data
       })
     );
 };
