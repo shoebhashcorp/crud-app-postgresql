@@ -12,19 +12,19 @@ class OAuth extends Component {
 
   popup = null;
 
-  componentDidMount() {
-    const { provider, socket } = this.props;
+  // componentDidMount() {
+  //   const { provider, socket } = this.props;
 
-    socket.on(provider, data => {
-      if (this.popup) {
-        this.popup.close();
-      }
+  //   socket.on(provider, data => {
+  //     if (this.popup) {
+  //       this.popup.close();
+  //     }
 
-      if (data.token) {
-        this.props.loginSocketUser(data);
-      }
-    });
-  }
+  //     if (data.token) {
+  //       this.props.loginSocketUser(data);
+  //     }
+  //   });
+  // }
 
   // Routinely checks the popup to re-enable the login button
   // if the user closes the popup without authenticating.

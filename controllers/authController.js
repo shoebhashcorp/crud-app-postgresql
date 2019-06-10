@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const nanoid = require("nanoid");
-const User = require("../models/User");
+
 const returnAuthPayload = require("./userUtils");
 
 exports.google = (req, res) => {
