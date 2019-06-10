@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const nanoid = require("nanoid");
-const User = require("../models/User");
+const User = require("../models/user");
 const returnAuthPayload = require("./userUtils");
 
 exports.google = (req, res) => {
@@ -35,7 +35,10 @@ function createOrAuthenticateUser(req, socketUser, socketName) {
   const io = req.app.get("io");
   let errors = {};
 
-  User.where({ email: socketUser.email })
+  User.query({
+    where: { email: socketUser.email }
+  })
+    .fetch()
     .then(user => {
       // check for user
       if (!user) {
@@ -43,13 +46,16 @@ function createOrAuthenticateUser(req, socketUser, socketName) {
         createSocketUser(req, socketUser, socketName);
       } else {
         // update user save email verification true
-        user.accountactivated = "yes";
-        user.emailverified = "yes";
+
         user.save();
         //User matched Create JWT Payload
-        let payload = returnAuthPayload.returnAuthPayload(user);
+
         jwt.sign(
-          payload,
+          {
+            id: user.get("id"),
+            username: user.get("username"),
+            email: user.get("email")
+          },
           process.env.SECRET_OR_KEY,
           { expiresIn: process.env.TOKEN_EXPIRY_TIME },
           (err, token) => {
@@ -71,16 +77,22 @@ function createOrAuthenticateUser(req, socketUser, socketName) {
 function createSocketUser(req, socketUser, socketName) {
   let password = nanoid(48);
   let userName = socketUser.name.split(" ");
-  const newUser = new User({
-    firstname: encodeURIComponent(userName[0]),
-    lastname: encodeURIComponent(userName[1] ? userName[1] : ""),
-    email: socketUser.email,
-    password_digest: password
-  });
+
   // console.log(newUser);
 
-  newUser
+  User.forge(
+    {
+      username: encodeURIComponent(userName),
+
+      email: socketUser.email,
+      password_digest: password
+    },
+    {
+      hasTimestamps: true
+    }
+  )
     .save()
+
     .then(user => {
       createOrAuthenticateUser(req, socketUser, socketName);
     })

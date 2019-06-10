@@ -1,6 +1,3 @@
-const users = require("./routes/api/users");
-const profile = require("./routes/api/profile");
-
 require("dotenv").config({ path: "./secrets/.env" });
 const express = require("express");
 const http = require("http");
@@ -12,14 +9,15 @@ const path = require("path");
 
 const session = require("express-session");
 
-const cloudSocket = require("./cloudSocket");
+const users = require("./routes/api/users");
+const profile = require("./routes/api/profile");
+
 // const colorChange = require("./colorChange");
 const authRouter = require("./routes/api/auth");
 
 var currentProcessEnv = process.env.NODE_ENV.toUpperCase();
 const app = express();
 const port = process.env[`${currentProcessEnv}_PORT`];
-const mongoDBUri = process.env[`${currentProcessEnv}_MONGO_URI`];
 
 // Rate Limiting
 
@@ -34,14 +32,6 @@ app.use(
     parameterLimit: 50000
   })
 );
-
-// connnect to mongoDB
-mongoose
-  .connect(mongoDBUri, { useNewUrlParser: true, useCreateIndex: true })
-  .then(() => {
-    console.log("MongoDB Connected");
-  })
-  .catch(err => console.log(err));
 
 // saveUninitialized: true allows us to attach the socket id to the session
 // before we have athenticated the user
@@ -60,7 +50,7 @@ require("./config/passport")(passport);
 
 // Users API
 app.use("/api/users", users);
-
+app.use("/api/profile", profile);
 app.use("/auth", authRouter);
 app.use("/test", (req, res) => {
   res.status(200).json({ status: "success" });
@@ -77,7 +67,7 @@ io.on("connection", socket => {
   app.set("socket", socket);
 
   // colorChange(socket, io);
-  cloudSocket(socket);
+  // cloudSocket(socket);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");

@@ -28,11 +28,14 @@ class Register extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+
     if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
+      this.setState({ errors: nextProps.errors, isSubmitting: false });
     }
   }
-
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -44,7 +47,6 @@ class Register extends Component {
       username: this.state.username,
       email: this.state.email,
       password: this.state.password,
-      timezone: this.state.timezone,
       passwordConfirmation: this.state.passwordConfirmation
     };
 
@@ -80,14 +82,7 @@ class Register extends Component {
                   error={errors.email}
                   info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
                 />
-                <TextFieldGroup
-                  placeholder="timezone"
-                  name="timezone"
-                  type="text"
-                  value={this.state.timezone}
-                  onChange={this.onChange}
-                  error={errors.timezone}
-                />
+
                 <TextFieldGroup
                   placeholder="Password"
                   name="password"

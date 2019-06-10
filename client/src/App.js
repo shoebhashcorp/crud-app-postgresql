@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser, logoutUser } from "./actions/authActions";
+import {
+  setCurrentUser,
+  logoutUser,
+  setSocketConnection
+} from "./actions/authActions";
 import PrivateRoute from "./components/common/PrivateRoute";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -38,6 +42,7 @@ if (localStorage.jwtToken) {
     window.location.href = "/login";
   }
 }
+store.dispatch(setSocketConnection());
 
 class App extends Component {
   render() {

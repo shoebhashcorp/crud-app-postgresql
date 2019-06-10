@@ -12,7 +12,6 @@ class Profile extends Component {
   render() {
     const profile = this.props.profile.profile.map(pro => (
       <tr key={pro.id}>
-        <td>{pro.id}</td>
         <td>{pro.firstName}</td>
         <td>{pro.lastName}</td>
         <td>{pro.email}</td>
@@ -22,7 +21,7 @@ class Profile extends Component {
         <td>
           {" "}
           <Link to={`/edit-profile/${pro.id}`} className="btn btn-success">
-            <i className="fas fa-user-circle text-info mr-1" /> Edit 
+            <i className="fas fa-user-circle text-info mr-1" /> Edit
           </Link>
         </td>
         <td>
@@ -37,11 +36,10 @@ class Profile extends Component {
     ));
     return (
       <div className="container">
-        <h4 className="mb-4">Education Credentials</h4>
+        <h4 className="mb-4">Your Addressess</h4>
         <table className="table table-dark">
           <thead>
             <tr>
-              <th>id</th>
               <th>firstName</th>
               <th>lastName</th>
               <th>email</th>

@@ -75,7 +75,6 @@ router.post("/register", (req, res) => {
         User.forge(
           {
             username,
-            timezone,
             email,
             password_digest
           },
@@ -119,10 +118,10 @@ router.post("/login", (req, res) => {
               id: user.get("id"),
               username: user.get("username"),
               email: user.get("email"),
-              expiresIn: 3600
+              expiresIn: 36000
             },
 
-            config.jwtSecret
+            process.env.SECRET_OR_KEY
           );
 
           res.json({ token: "bearer " + token });

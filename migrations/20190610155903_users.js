@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
         .string("email")
         .notNullable()
         .unique();
-      table.string("timezone").notNullable();
+
       table.string("password_digest").notNullable();
       table.timestamps();
     })
