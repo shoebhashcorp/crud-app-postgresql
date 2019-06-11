@@ -66,8 +66,6 @@ io.on("connection", socket => {
   console.log("User Connected");
   app.set("socket", socket);
 
-  // colorChange(socket, io);
-  // cloudSocket(socket);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
